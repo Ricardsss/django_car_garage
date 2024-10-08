@@ -22,11 +22,14 @@ class Car(models.Model):
         max_length=1, choices=RENTAL_STATUS, blank=True, default="a"
     )
 
+    def model(self):
+        return self.car_model
+
     def make(self):
         return self.car_model.make
 
     def __str__(self):
-        return f"{self.colour} {self.car_model.make} {self.car_model} -- {self.year}"
+        return f"{self.colour} {self.make()} {self.model()} -- {self.year}"
 
     def get_absolute_url(self):
         return reverse("car-detail", args=[str(self.id)])
