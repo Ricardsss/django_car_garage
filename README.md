@@ -164,15 +164,19 @@ This API allows you to manage cars, car models, and car makes. The available end
 ## Setup and Installation
 
 1. Clone the repository.
-2. Install the required dependencies:
+2. Change into the project folder
+   ```bash
+   cd cargarage
+   ```
+3. Install the required dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-3. Run the migrations:
+4. Run the migrations:
    ```bash
    python manage.py migrate
    ```
-4. Run the Django development server:
+5. Run the Django development server:
    ```bash
    python manage.py runserver
    ```
