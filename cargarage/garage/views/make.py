@@ -1,11 +1,20 @@
-from django.http import HttpResponse
+from django.http import JsonResponse
 
 from ..models import Make
-from ..serializers import serialize_to_json
+
+
+def get_all_makes(request):
+    makes = Make.objects.all()
+
+    makes_list = [{"id": make.id, "name": make.name} for make in makes]
+
+    return JsonResponse(makes_list, safe=False, status=200)
 
 
 class MakeView:
-    def makes_list(request):
-        query = Make.objects.all()
-        makes = serialize_to_json(query)
-        return HttpResponse(makes)
+
+    def makes(request):
+        if request.method == "GET":
+            return get_all_makes(request)
+        else:
+            return JsonResponse({"error": "Only GET method allowed"}, status=405)

@@ -1,210 +1,186 @@
-Car Garage API
+# Car Garage API
 
-This API allows you to manage cars in a car garage system. It supports creating, updating, retrieving, and deleting car records, as well as retrieving all cars or a specific car by its ID.
+This API allows you to manage cars, car models, and car makes. The available endpoints are as follows:
 
-Endpoints
+## Endpoints
 
-1. Create a New Car (POST /cars/)
-   Description:
+### 1. Get All Cars
 
-Creates a new car record.
+- **URL**: `/cars/`
+- **Method**: GET
+- **Description**: Retrieves a list of all cars in the system.
+- **Request Body**: None
 
-Request Method:
+### 2. Create a New Car
 
-POST
+- **URL**: `/cars/`
+- **Method**: POST
+- **Description**: Creates a new car. If the car model and make do not exist, they will be created.
+- **Request Body Example**:
 
-URL:
-
-/cars/
-
-Request Body:
-
-json
-Copy code
+```json
 {
-"car_model": "<car_model_id>", # UUID of the CarModel object
-"colour": "string", # Colour of the car
-"year": "YYYY", # Year of manufacture (4 characters)
-"VIN": "17-char VIN", # Vehicle Identification Number (17 characters)
-"mileage": integer, # Mileage of the car
-"status": "a" # Car rental status ('a' = Available, 'u' = Unavailable, 'm' = Maintenance)
+  "make_name": "Honda",
+  "model_name": "Civic",
+  "colour": "Blue",
+  "year": "2021",
+  "VIN": "1HGCM82633A123457",
+  "mileage": 12000
 }
-Response:
+```
 
-201 Created: The car was successfully created.
-400 Bad Request: Invalid input or VIN already exists.
-Example:
+### 3. Get a Car by ID
 
-bash
-Copy code
-curl -X POST http://localhost:8000/cars/ \
--H "Content-Type: application/json" \
--d '{
-"car_model": "123e4567-e89b-12d3-a456-426614174000",
-"colour": "Red",
-"year": "2020",
-"VIN": "1HGCM82633A123456",
-"mileage": 15000,
-"status": "a"
-}' 2. Get All Cars (GET /cars/)
-Description:
+- **URL**: `/cars/<uuid:car_id>/`
+- **Method**: GET
+- **Description**: Retrieves the details of a car by its ID.
+- **Request Body**: None
 
-Retrieves a list of all cars in the system.
+### 4. Update a Car
 
-Request Method:
+- **URL**: `/cars/<uuid:car_id>/`
+- **Method**: PATCH
+- **Description**: Updates the details of a car by its ID.
+- **Request Body Example**:
 
-GET
+```json
+{
+  "colour": "Black",
+  "mileage": 10000,
+  "status": "m"
+}
+```
 
-URL:
+### 5. Delete a Car
 
-/cars/
+- **URL**: `/cars/<uuid:car_id>/`
+- **Method**: DELETE
+- **Description**: Deletes a car by its ID. If the deleted car was the last one of its model or make, the model and make are also deleted.
+- **Request Body**: None
 
-Response:
+### 6. Get Cars by Make
 
-200 OK: A list of cars is returned.
-500 Internal Server Error: An error occurred while fetching the data.
-Example:
+- **URL**: `/cars_by_make/<str:make_id>/`
+- **Method**: GET
+- **Description**: Retrieves all cars that belong to a specific make.
+- **Request Body**: None
 
-bash
-Copy code
-curl -X GET http://localhost:8000/cars/
-Response:
+### 7. Get Cars by Model
 
-json
-Copy code
+- **URL**: `/get_cars_by_model/<str:model_id>/`
+- **Method**: GET
+- **Description**: Retrieves all cars that belong to a specific model.
+- **Request Body**: None
+
+### 8. Get All Makes
+
+- **URL**: `/makes/`
+- **Method**: GET
+- **Description**: Retrieves a list of all car makes in the system.
+- **Request Body**: None
+
+### 9. Get All Car Models
+
+- **URL**: `/models/`
+- **Method**: GET
+- **Description**: Retrieves a list of all car models in the system.
+- **Request Body**: None
+
+## Error Handling
+
+- The API returns appropriate status codes and error messages in the response.
+  - 404: If a car, make, or model is not found.
+  - 400: If there is an issue with the input data (e.g., validation errors).
+  - 405: If an unsupported HTTP method is used.
+
+## Example API Responses
+
+### GET /cars/
+
+```json
 [
+  {
+    "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+    "model": "Accord",
+    "make": "Honda",
+    "colour": "Red",
+    "year": "2020",
+    "VIN": "1HGCM82633A123456",
+    "mileage": 15000,
+    "status": "Available"
+  },
+  ...
+]
+```
+
+### POST /cars/ (Create Car)
+
+```json
 {
-"id": "c84a3e7b-7e1e-4211-89a6-d3b0243fe2b4",
-"car_model": "Toyota Camry",
-"colour": "Red",
-"year": "2020",
-"VIN": "1HGCM82633A123456",
-"mileage": 15000,
-"status": "Available"
-},
-...
-] 3. Get Car by ID (GET /cars/<uuid:car_id>/)
-Description:
-
-Retrieves details of a single car by its ID.
-
-Request Method:
-
-GET
-
-URL:
-
-/cars/<uuid:car_id>/
-
-Response:
-
-200 OK: The car details are returned.
-404 Not Found: Car not found.
-Example:
-
-bash
-Copy code
-curl -X GET http://localhost:8000/cars/c84a3e7b-7e1e-4211-89a6-d3b0243fe2b4/
-Response:
-
-json
-Copy code
-{
-"id": "c84a3e7b-7e1e-4211-89a6-d3b0243fe2b4",
-"car_model": "Toyota Camry",
-"colour": "Red",
-"year": "2020",
-"VIN": "1HGCM82633A123456",
-"mileage": 15000,
-"status": "Available"
-} 4. Update Car (PATCH /cars/<uuid:car_id>/)
-Description:
-
-Updates a car's details partially.
-
-Request Method:
-
-PATCH
-
-URL:
-
-/cars/<uuid:car_id>/
-
-Request Body:
-
-You can send any of the following fields to update:
-
-json
-Copy code
-{
-"car_model": "<car_model_id>", # UUID of the CarModel object
-"colour": "string", # Colour of the car
-"year": "YYYY", # Year of manufacture (4 characters)
-"VIN": "17-char VIN", # Vehicle Identification Number (17 characters)
-"mileage": integer, # Mileage of the car
-"status": "a" # Car rental status ('a' = Available, 'u' = Unavailable, 'm' = Maintenance)
+  "car_id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+  "make_created": false,
+  "model_created": false,
+  "message": "Car created successfully."
 }
-Response:
+```
 
-200 OK: The car was successfully updated.
-404 Not Found: Car not found.
-400 Bad Request: Invalid input.
-Example:
+### GET /cars/<uuid:car_id>/
 
-bash
-Copy code
-curl -X PATCH http://localhost:8000/cars/c84a3e7b-7e1e-4211-89a6-d3b0243fe2b4/ \
--H "Content-Type: application/json" \
--d '{
-"colour": "Green",
-"mileage": 16000
-}' 5. Delete Car (DELETE /cars/<uuid:car_id>/)
-Description:
-
-Deletes a specific car by its ID.
-
-Request Method:
-
-DELETE
-
-URL:
-
-/cars/<uuid:car_id>/
-
-Response:
-
-200 OK: The car was successfully deleted.
-404 Not Found: Car not found.
-Example:
-
-bash
-Copy code
-curl -X DELETE http://localhost:8000/cars/c84a3e7b-7e1e-4211-89a6-d3b0243fe2b4/
-Response:
-
-json
-Copy code
+```json
 {
-"message": "Car deleted successfully"
+  "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+  "model": "Accord",
+  "make": "Honda",
+  "colour": "Red",
+  "year": "2020",
+  "VIN": "1HGCM82633A123456",
+  "mileage": 15000,
+  "status": "Available"
 }
-Status Codes
+```
 
-200 OK: Successful requests.
-201 Created: The resource was successfully created.
-400 Bad Request: The input data is invalid.
-404 Not Found: The requested resource does not exist.
-405 Method Not Allowed: The HTTP method used is not allowed.
-500 Internal Server Error: An unexpected server error occurred.
-Setup
+### PATCH /cars/<uuid:car_id>/
 
-To run this project locally:
+```json
+{
+  "car_model": "Accord",
+  "car_make": "Honda",
+  "colour": "Black",
+  "year": "2022",
+  "VIN": "1HGCM82633A123457",
+  "mileage": 10000,
+  "status": "Available"
+}
+```
 
-Clone the repository.
-Run "cd cargarage"
-Install the required dependencies using pip install -r requirements.txt.
-Set up the database using python manage.py migrate.
-Run the development server using python manage.py runserver.
-Notes
+### DELETE /cars/<uuid:car_id>/
 
-Ensure proper validation is in place for creating and updating cars.
-For PATCH and DELETE requests, ensure that only authorized users have access to these actions in production.
+```json
+{
+  "message": "Car deleted successfully"
+}
+```
+
+## Setup and Installation
+
+1. Clone the repository.
+2. Install the required dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Run the migrations:
+   ```bash
+   python manage.py migrate
+   ```
+4. Run the Django development server:
+   ```bash
+   python manage.py runserver
+   ```
+
+## Authentication
+
+This API does not currently require authentication, but it can be added using Django's authentication system or third-party packages such as Django Rest Framework.
+
+## License
+
+This project is licensed under the CC0 1.0 Universal License - see the LICENSE file for details.

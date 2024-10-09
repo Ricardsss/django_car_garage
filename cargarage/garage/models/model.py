@@ -6,7 +6,7 @@ from .make import Make
 
 
 class CarModel(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     make = models.ForeignKey(Make, on_delete=models.RESTRICT)
 
     def __str__(self):

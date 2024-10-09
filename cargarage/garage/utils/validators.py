@@ -2,9 +2,9 @@ from django.core.exceptions import ValidationError
 from ..models import CarModel
 
 
-def validate_car_model(car_model_id):
+def validate_car_model(car_model_name):
     try:
-        car_model = CarModel.objects.get(id=car_model_id)
+        car_model = CarModel.objects.get(name=car_model_name)
     except CarModel.DoesNotExist:
         raise ValidationError("Car model not found")
     return car_model
