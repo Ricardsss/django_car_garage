@@ -4,9 +4,6 @@ from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from ..models import Car, Make, CarModel
 from ..utils.validators import (
-    validate_car_model,
-    validate_year,
-    validate_vin,
     validate_mileage,
     validate_status,
 )
@@ -210,7 +207,7 @@ class CarView:
                 {"error": "Only GET or POST method allowed"}, status=405
             )
 
-    @csrf_exempt
+    # @csrf_exempt
     def car(request, car_id):
         if request.method == "GET":
             return get_car_by_id(request, car_id)
