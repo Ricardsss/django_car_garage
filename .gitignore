@@ -171,3 +171,7 @@ cython_debug/
 *.DS_Store
 
 *migrations
+
+*.pyc
+media
+staticfiles
