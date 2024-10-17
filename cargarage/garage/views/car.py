@@ -1,7 +1,8 @@
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
+from django.contrib.auth.decorators import login_required
+
 from ..models import Car, Make, CarModel
 from ..utils.validators import (
     validate_mileage,
@@ -196,7 +197,7 @@ def delete_car(request, car_id):
 
 class CarView:
 
-    @csrf_exempt
+    @login_required
     def cars(request):
         if request.method == "GET":
             return get_all_cars(request)
@@ -207,7 +208,7 @@ class CarView:
                 {"error": "Only GET or POST method allowed"}, status=405
             )
 
-    # @csrf_exempt
+    @login_required
     def car(request, car_id):
         if request.method == "GET":
             return get_car_by_id(request, car_id)
@@ -220,6 +221,7 @@ class CarView:
                 {"error": "Only GET, PATCH or DELETE method allowed"}, status=405
             )
 
+    @login_required
     def get_cars_by_make(request, make_id):
         if request.method == "GET":
             try:
@@ -248,6 +250,7 @@ class CarView:
 
         return JsonResponse({"error": "Only GET method allowed"}, status=405)
 
+    @login_required
     def get_cars_by_model(request, model_id):
         if request.method == "GET":
             try:
