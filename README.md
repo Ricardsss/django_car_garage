@@ -1,8 +1,14 @@
 # Car Garage API
 
-This API allows you to manage cars, car models, and car makes. The available endpoints are as follows:
+This is the API documentation for the Django project, which includes user authentication (registration, login, and logout) and managing cars, makes, and models.
 
 ## Endpoints
+
+## Authentication
+
+### Register a New User
+
+**Endpoint:** `POST /accounts/register/`
 
 **Request Body:**
 
